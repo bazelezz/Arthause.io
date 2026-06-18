@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art House — пространство для отдыха души и тела | Набережные Челны</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --asphalt: #1a1a1a;
+            --asphalt-light: #2c2c2c;
+            --mist: #3a3a3a;
+            --champagne: #f7e8d0;
+            --rust: #b35a3a;
+            --old-silver: #8a8a8a;
+            --white: #e8e0d4;
+            --text-dim: #6a6a6a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: var(--rust) var(--asphalt);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--asphalt);
+            color: var(--white);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--champagne);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease, opacity 0.3s ease;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(3);
+            background: rgba(247, 232, 208, 0.1);
+        }
+
+        /* Loading Screen - Fog Effect */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--asphalt);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s ease, filter 1.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 300;
+            color: var(--champagne);
+            opacity: 0;
+            animation: loadFade 2s ease forwards;
+        }
+
+        @keyframes loadFade {
+            0% { opacity: 0; filter: blur(10px); }
+            50% { opacity: 1; filter: blur(0); }
+            100% { opacity: 0; filter: blur(5px); }
+        }
+
+        /* Floating Navigation */
+        .nav {
+            position: fixed;
+            left: -300px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            transition: left 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            padding: 2rem;
+        }
+
+        .nav.visible {
+            left: 0;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--old-silver);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: all 0.4s ease;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--champagne);
+            transition: width 0.4s ease;
+            transform: translateY(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--champagne);
+        }
+
+        .nav-link:hover::before {
+            width: 1.5rem;
+        }
+
+        /* Scene 1: Oщущение */
+        .scene-1 {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scene-1-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(180deg, rgba(26, 26, 26, 0.3) 0%, rgba(26, 26, 26, 0.8) 100%),
+                linear-gradient(135deg, var(--asphalt) 0%, var(--asphalt-light) 50%, var(--mist) 100%);
+            filter: grayscale(30%) contrast(1.1);
+            transform: scale(1.1);
+            animation: scene1Zoom 30s ease-in-out infinite alternate;
+        }
+
+        .scene-1-bg::after {
+            content: 'Ваше фото';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--old-silver);
+            opacity: 0.3;
+            letter-spacing: 0.2em;
+        }
+
+        @keyframes scene1Zoom {
+            from { transform: scale(1.1); filter: grayscale(30%) contrast(1.1); }
+            to { transform: scale(1.0); filter: grayscale(20%) contrast(1.05); }
+        }
+
+        .scene-1-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .scene-1-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 300;
+            color: var(--champagne);
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: titleReveal 2s ease 2.5s forwards;
+        }
+
+        @keyframes titleReveal {
+            from { opacity: 0; transform: translateY(40px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .scene-1-subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--old-silver);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: titleReveal 1.5s ease 3s forwards;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            animation: titleReveal 1s ease 3.5s forwards;
+        }
+
+        .scroll-hint span {
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--champagne), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        /* Scene 2: Арт-объекты */
+        .scene-2 {
+            min-height: 100vh;
+            padding: 10rem 5rem;
+            position: relative;
+            background: linear-gradient(180deg, var(--asphalt) 0%, var(--asphalt-light) 50%, var(--asphalt) 100%);
+        }
+
+        .scene-2-header {
+            text-align: center;
+            margin-bottom: 8rem;
+        }
+
+        .scene-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--rust);
+            margin-bottom: 2rem;
+        }
+
+        .scene-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 300;
+            color: var(--champagne);
+            line-height: 1.1;
+        }
+
+        .art-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: auto;
+            gap: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .art-piece {
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .art-piece:nth-child(1) { grid-column: 1 / 8; grid-row: 1; }
+        .art-piece:nth-child(2) { grid-column: 8 / 13; grid-row: 1; }
+        .art-piece:nth-child(3) { grid-column: 1 / 5; grid-row: 2; }
+        .art-piece:nth-child(4) { grid-column: 5 / 13; grid-row: 2; }
+
+        .art-piece-img {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            object-fit: cover;
+            filter: grayscale(60%) contrast(1.1);
+            transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .art-piece:hover .art-piece-img {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1.05);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            background: linear-gradient(135deg, var(--asphalt) 0%, var(--asphalt-light) 50%, var(--mist) 100%);
+            border: 1px dashed rgba(138, 138, 138, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--old-silver);
+            opacity: 0.5;
+            letter-spacing: 0.15em;
+        }
+
+        .art-piece-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26, 26, 26, 0.9) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .art-piece:hover .art-piece-overlay {
+            opacity: 1;
+        }
+
+        .art-piece-title {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--champagne);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.2s;
+        }
+
+        .art-piece:hover .art-piece-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .art-piece-price {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--rust);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.3s;
+        }
+
+        .art-piece:hover .art-piece-price {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--champagne);
+            border-radius: 50%;
+            cursor: none;
+            z-index: 10;
+        }
+
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            inset: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: var(--champagne);
+            border-radius: 50%;
+            animation: tooltipPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes tooltipPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.5; }
+        }
+
+        .tooltip-content {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(247, 232, 208, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .tooltip:hover .tooltip-content {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-15px);
+        }
+
+        .tooltip-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--champagne);
+            margin-bottom: 0.3rem;
+        }
+
+        .tooltip-text {
+            font-size: 0.7rem;
+            color: var(--old-silver);
+        }
+
+        /* Scene 3: География чувств */
+        .scene-3 {
+            min-height: 100vh;
+            padding: 10rem 5rem;
+            position: relative;
+            background: var(--asphalt-light);
+            display: flex;
+            align-items: center;
+        }
+
+        .scene-3-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8rem;
+            align-items: center;
+        }
+
+        .scene-3-map {
+            position: relative;
+            aspect-ratio: 1;
+        }
+
+        .map-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-path {
+            fill: none;
+            stroke: var(--old-silver);
+            stroke-width: 1;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawPath 4s ease forwards 1s;
+        }
+
+        @keyframes drawPath {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .map-dot {
+            fill: var(--rust);
+            animation: dotPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { r: 4; opacity: 1; }
+            50% { r: 8; opacity: 0.5; }
+        }
+
+        .map-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12px;
+            fill: var(--champagne);
+        }
+
+        .scene-3-info {
+            padding: 2rem 0;
+        }
+
+        .scene-3-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 300;
+            color: var(--champagne);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .scene-3-text {
+            font-size: 0.95rem;
+            line-height: 2;
+            color: var(--old-silver);
+            margin-bottom: 2rem;
+        }
+
+        .scene-3-detail {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(138, 138, 138, 0.2);
+        }
+
+        .scene-3-detail-icon {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--rust);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--rust);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .scene-3-detail-text h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--champagne);
+            margin-bottom: 0.3rem;
+        }
+
+        .scene-3-detail-text p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* Scene 4: Диалог */
+        .scene-4 {
+            min-height: 100vh;
+            padding: 10rem 5rem;
+            position: relative;
+            background: linear-gradient(180deg, var(--asphalt) 0%, var(--asphalt-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .chat-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            color: var(--champagne);
+            margin-bottom: 1rem;
+        }
+
+        .chat-subtitle {
+            font-size: 0.8rem;
+            color: var(--old-silver);
+            letter-spacing: 0.2em;
+        }
+
+        .chat-window {
+            background: rgba(44, 44, 44, 0.5);
+            border: 1px solid rgba(138, 138, 138, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: messageAppear 0.6s ease forwards;
+        }
+
+        .chat-message:nth-child(1) { animation-delay: 1s; }
+        .chat-message:nth-child(2) { animation-delay: 2s; }
+        .chat-message:nth-child(3) { animation-delay: 3s; }
+        .chat-message:nth-child(4) { animation-delay: 4s; }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--rust);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--champagne);
+            flex-shrink: 0;
+        }
+
+        .chat-bubble {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(138, 138, 138, 0.2);
+            border-radius: 0 12px 12px 12px;
+            padding: 1rem 1.5rem;
+            max-width: 80%;
+        }
+
+        .chat-bubble-text {
+            font-size: 0.9rem;
+            color: var(--white);
+            line-height: 1.6;
+        }
+
+        .chat-bubble-time {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 0.5rem 0;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--old-silver);
+            border-radius: 50%;
+            animation: typingBounce 1.4s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+
+        .chat-contacts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(44, 44, 44, 0.3);
+            border: 1px solid rgba(138, 138, 138, 0.1);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+        }
+
+        .contact-card:hover {
+            border-color: var(--rust);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .contact-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--old-silver);
+        }
+
+        /* Night Mode */
+        body.night {
+            --asphalt: #0a0a0a;
+            --asphalt-light: #151515;
+        }
+
+        .candles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        body.night .candles {
+            opacity: 1;
+        }
+
+        .candle {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(to top, var(--rust), var(--champagne));
+            border-radius: 2px;
+            animation: candleFlicker 3s ease-in-out infinite;
+        }
+
+        .candle::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 15px;
+            background: radial-gradient(ellipse, rgba(247, 232, 208, 0.8), transparent);
+            border-radius: 50%;
+            animation: flameFlicker 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes candleFlicker {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes flameFlicker {
+            from { transform: translateX(-50%) scaleY(1); }
+            to { transform: translateX(-50%) scaleY(1.2); }
+        }
+
+        .candle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .candle:nth-child(2) { left: 20%; top: 60%; animation-delay: 0.5s; }
+        .candle:nth-child(3) { left: 80%; top: 30%; animation-delay: 1s; }
+        .candle:nth-child(4) { left: 90%; top: 70%; animation-delay: 1.5s; }
+        .candle:nth-child(5) { left: 50%; top: 80%; animation-delay: 2s; }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Mobile */
+        @media (max-width: 1024px) {
+            .nav { display: none; }
+            .scene-2 { padding: 6rem 2rem; }
+            .art-grid { grid-template-columns: 1fr; }
+            .art-piece:nth-child(1),
+            .art-piece:nth-child(2),
+            .art-piece:nth-child(3),
+            .art-piece:nth-child(4) { grid-column: 1; grid-row: auto; }
+            .scene-3-container { grid-template-columns: 1fr; gap: 4rem; }
+            .scene-3 { padding: 6rem 2rem; }
+            .scene-4 { padding: 6rem 2rem; }
+            .chat-contacts { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+            .scene-1-title { font-size: 3rem; }
+            .scene-2 { padding: 4rem 1.5rem; }
+            .scene-3 { padding: 4rem 1.5rem; }
+            .scene-4 { padding: 4rem 1.5rem; }
+            .chat-contacts { grid-template-columns: 1fr; }
+            .cursor { display: none; }
+            body { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text">Art House</div>
+    </div>
+
+    <!-- Night Mode Candles -->
+    <div class="candles">
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <div class="candle"></div>
+    </div>
+
+    <!-- Floating Navigation -->
+    <nav class="nav" id="nav">
+        <ul class="nav-list">
+            <li><a href="#scene1" class="nav-link">Ощущение</a></li>
+            <li><a href="#scene2" class="nav-link">Арт-объекты</a></li>
+            <li><a href="#scene3" class="nav-link">География</a></li>
+            <li><a href="#scene4" class="nav-link">Диалог</a></li>
+        </ul>
+    </nav>
+
+    <!-- Scene 1: Ощущение -->
+    <section class="scene-1" id="scene1">
+        <div class="scene-1-bg"></div>
+        <div class="scene-1-content">
+            <h1 class="scene-1-title">Art House</h1>
+            <p class="scene-1-subtitle">Пространство для отдыха души и тела</p>
+        </div>
+        <div class="scroll-hint">
+            <span>Листайте</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Scene 2: Арт-объекты -->
+    <section class="scene-2" id="scene2">
+        <div class="scene-2-header">
+            <div class="scene-label reveal">Сцена 2</div>
+            <h2 class="scene-title reveal reveal-delay-1">Арт-объекты</h2>
+        </div>
+        <div class="art-grid">
+            <div class="art-piece reveal">
+                <div class="photo-placeholder">Ваше фото</div>
+                <div class="art-piece-overlay"></div>
+                <div class="art-piece-title">Коттедж «Тишина»</div>
+                <div class="art-piece-price">Узнайте цену этого момента</div>
+                <div class="tooltip" style="top: 30%; left: 40%;">
+                    <div class="tooltip-content">
+                        <div class="tooltip-title">Сауна</div>
+                        <div class="tooltip-text">Финская сауна с березовым веником</div>
+                    </div>
+                </div>
+            </div>
+            <div class="art-piece reveal reveal-delay-1">
+                <div class="photo-placeholder">Ваше фото</div>
+                <div class="art-piece-overlay"></div>
+                <div class="art-piece-title">Коттедж «Покой»</div>
+                <div class="art-piece-price">От сорока девяти тысяч</div>
+                <div class="tooltip" style="top: 50%; left: 60%;">
+                    <div class="tooltip-content">
+                        <div class="tooltip-title">Банный чан</div>
+                        <div class="tooltip-text">Горячий чан под открытым небом</div>
+                    </div>
+                </div>
+            </div>
+            <div class="art-piece reveal reveal-delay-2">
+                <div class="photo-placeholder">Ваше фото</div>
+                <div class="art-piece-overlay"></div>
+                <div class="art-piece-title">Коттедж «Гармония»</div>
+                <div class="art-piece-price">Цена тишины</div>
+                <div class="tooltip" style="top: 40%; left: 30%;">
+                    <div class="tooltip-content">
+                        <div class="tooltip-title">Камин</div>
+                        <div class="tooltip-text">Живой огонь для уютных вечеров</div>
+                    </div>
+                </div>
+            </div>
+            <div class="art-piece reveal reveal-delay-3">
+                <div class="photo-placeholder">Ваше фото</div>
+                <div class="art-piece-overlay"></div>
+                <div class="art-piece-title">Коттедж «Пространство»</div>
+                <div class="art-piece-price">Для тех, кто ценит момент</div>
+                <div class="tooltip" style="top: 60%; left: 70%;">
+                    <div class="tooltip-content">
+                        <div class="tooltip-title">Терраса</div>
+                        <div class="tooltip-text">Панорамный вид на природу</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scene 3: География чувств -->
+    <section class="scene-3" id="scene3">
+        <div class="scene-3-container">
+            <div class="scene-3-map reveal">
+                <svg class="map-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Stylized map path -->
+                    <path class="map-path" d="M50 200 Q100 150 150 180 T250 160 Q300 140 350 170" />
+                    <path class="map-path" d="M50 220 Q120 280 200 250 T350 230" style="animation-delay: 0.5s;" />
+                    
+                    <!-- City dots -->
+                    <circle cx="80" cy="200" r="6" fill="var(--old-silver)" opacity="0.5" />
+                    <text class="map-label" x="80" y="230" text-anchor="middle">Казань</text>
+                    
+                    <circle cx="280" cy="170" r="6" fill="var(--old-silver)" opacity="0.5" />
+                    <text class="map-label" x="280" y="200" text-anchor="middle">Набережные Челны</text>
+                    
+                    <!-- Art House dot -->
+                    <circle class="map-dot" cx="200" cy="200" r="4" />
+                    <text class="map-label" x="200" y="180" text-anchor="middle" fill="var(--rust)">Art House</text>
+                    
+                    <!-- Decorative elements -->
+                    <circle cx="200" cy="200" r="30" fill="none" stroke="var(--rust)" stroke-width="0.5" opacity="0.3" />
+                    <circle cx="200" cy="200" r="50" fill="none" stroke="var(--rust)" stroke-width="0.3" opacity="0.2" />
+                    <circle cx="200" cy="200" r="70" fill="none" stroke="var(--rust)" stroke-width="0.2" opacity="0.1" />
+                </svg>
+            </div>
+            <div class="scene-3-info">
+                <div class="scene-label reveal">Сцена 3</div>
+                <h2 class="scene-3-heading reveal reveal-delay-1">География чувств</h2>
+                <p class="scene-3-text reveal reveal-delay-2">
+                    Путь от суеты города до тишины Art House — это не просто расстояние. 
+                    Это трансформация. Каждый километр уводит вас дальше от шума и ближе к себе.
+                </p>
+                <div class="scene-3-detail reveal reveal-delay-3">
+                    <div class="scene-3-detail-icon">📍</div>
+                    <div class="scene-3-detail-text">
+                        <h4>Адрес</h4>
+                        <p>Центральная улица, 43, Набережные Челны</p>
+                    </div>
+                </div>
+                <div class="scene-3-detail reveal reveal-delay-3">
+                    <div class="scene-3-detail-icon">📞</div>
+                    <div class="scene-3-detail-text">
+                        <h4>Связь</h4>
+                        <p>+7 (927) 043-19-99</p>
+                    </div>
+                </div>
+                <div class="scene-3-detail reveal reveal-delay-4">
+                    <div class="scene-3-detail-icon">🕐</div>
+                    <div class="scene-3-detail-text">
+                        <h4>Время работы</h4>
+                        <p>Ежедневно с 09:00 до 21:00 по предварительному звонку</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scene 4: Диалог -->
+    <section class="scene-4" id="scene4">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="scene-label reveal">Сцена 4</div>
+                <h2 class="chat-title reveal reveal-delay-1">Диалог</h2>
+                <p class="chat-subtitle reveal reveal-delay-2">Мы на связи</p>
+            </div>
+            <div class="chat-window reveal reveal-delay-3">
+                <div class="chat-message">
+                    <div class="chat-avatar">A</div>
+                    <div class="chat-bubble">
+                        <div class="chat-bubble-text">Добро пожаловать в Art House. Расскажите нам о вашем идеальном отдыхе.</div>
+                        <div class="chat-bubble-time">09:00</div>
+                    </div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-avatar" style="background: var(--old-silver);">Вы</div>
+                    <div class="chat-bubble">
+                        <div class="chat-bubble-text">Хочу тишину, природу и уют.</div>
+                        <div class="chat-bubble-time">09:01</div>
+                    </div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-avatar">A</div>
+                    <div class="chat-bubble">
+                        <div class="chat-bubble-text">Мы создали пространство именно для этого. Ждём вас.</div>
+                        <div class="chat-bubble-time">09:01</div>
+                    </div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-avatar">A</div>
+                    <div class="chat-bubble">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-contacts reveal reveal-delay-4">
+                <a href="tel:+79270431999" class="contact-card">
+                    <span class="contact-icon">📞</span>
+                    <span class="contact-label">Телефон</span>
+                </a>
+                <a href="https://wa.me/79270431999" class="contact-card">
+                    <span class="contact-icon">💬</span>
+                    <span class="contact-label">WhatsApp</span>
+                </a>
+                <a href="https://t.me/+79270431999" class="contact-card">
+                    <span class="contact-icon">✈️</span>
+                    <span class="contact-label">Telegram</span>
+                </a>
+                <a href="https://vk.com/club226900953" class="contact-card">
+                    <span class="contact-icon">◆</span>
+                    <span class="contact-label">ВКонтакте</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const links = document.querySelectorAll('a, .art-piece, .tooltip');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Loading Screen
+        const loadingScreen = document.getElementById('loadingScreen');
+        setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+        }, 3000);
+
+        // Floating Navigation
+        const nav = document.getElementById('nav');
+        let lastScrollY = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 300) {
+                nav.classList.add('visible');
+            } else {
+                nav.classList.remove('visible');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
+        // Mouse near left edge shows nav
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientX < 50) {
+                nav.classList.add('visible');
+            }
+        });
+
+        // Scroll Reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Night Mode (after 20:00)
+        const hour = new Date().getHours();
+        if (hour >= 20 || hour < 6) {
+            document.body.classList.add('night');
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const scene1Bg = document.querySelector('.scene-1-bg');
+            if (scene1Bg) {
+                scene1Bg.style.transform = `scale(1.1) translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
